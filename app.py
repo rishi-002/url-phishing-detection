@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import pickle
 import re
+import os
 
 app = Flask(__name__)
 
@@ -55,7 +56,7 @@ def stats():
 
 
 # contact form route
-@app.route("/contact", methods=["GET","POST"])
+@app.route("/contact", methods=["GET", "POST"])
 def contact():
 
     if request.method == "POST":
@@ -69,19 +70,37 @@ def contact():
         print("Email:", email)
         print("Message:", message)
 
-        return "Message sent successfully!"
+        # Redirect with success flag so the page can show a confirmation
+        return redirect(url_for('contact') + '?sent=1')
 
     return render_template("contact.html")
+
+
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
+@app.route("/cookies")
+def cookies():
+    return render_template("cookies.html")
+
 
 @app.route("/subscribe", methods=["POST"])
 def subscribe():
 
     email = request.form["email"]
 
-    with open("subscribers.txt","a") as f:
+    with open("subscribers.txt", "a") as f:
         f.write(email + "\n")
 
-    return render_template("index.html", predict="Subscribed successfully!")
+    return render_template("index.html", predict="✓ Subscribed successfully!")
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))

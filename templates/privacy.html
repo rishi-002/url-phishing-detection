@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — PhishGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5; --indigo-light: #6366f1; --indigo-dark: #3730a3;
+      --indigo-50: #eef2ff; --indigo-100: #e0e7ff;
+      --white: #ffffff; --gray-50: #f9fafb; --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb; --gray-400: #9ca3af; --gray-500: #6b7280;
+      --gray-600: #4b5563; --gray-800: #1f2937;
+      --green-50: #f0fdf4; --green-100: #dcfce7; --green: #16a34a;
+      --font: 'Plus Jakarta Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); }
+
+    nav {
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 800; color: var(--gray-800);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .back-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.45rem 0.9rem;
+      border-radius: 8px; transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    .hero {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 3.5rem 2rem 5rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.15); color: white;
+      font-size: 0.78rem; font-weight: 700;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.25); position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800;
+      color: white; letter-spacing: -0.03em; margin-bottom: 0.75rem; position: relative;
+    }
+    .hero p {
+      font-size: 0.95rem; color: rgba(255,255,255,0.8);
+      max-width: 480px; margin: 0 auto; line-height: 1.6; position: relative;
+    }
+
+    .content-wrap { max-width: 800px; margin: -2.5rem auto 4rem; padding: 0 2rem; }
+
+    /* Summary cards row */
+    .summary-row {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .summary-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 14px; padding: 1.2rem;
+      text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .summary-card .s-icon { font-size: 1.6rem; margin-bottom: 0.4rem; display: block; }
+    .summary-card .s-label {
+      font-size: 0.78rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.2rem;
+    }
+    .summary-card .s-val { font-size: 0.75rem; color: var(--gray-500); }
+
+    .toc-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 16px; padding: 1.5rem 2rem;
+      margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+    .toc-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--indigo); margin-bottom: 1rem; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .toc-list a { font-size: 0.88rem; color: var(--gray-600); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+    .toc-list a:hover { color: var(--indigo); }
+    .toc-list a::before { content: ''; width: 5px; height: 5px; background: var(--indigo-100); border-radius: 50%; flex-shrink: 0; }
+
+    .main-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 20px; padding: 3rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+    }
+    .last-updated {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--gray-400);
+      background: var(--gray-50); border: 1px solid var(--gray-200);
+      padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 2rem;
+    }
+    .section { margin-bottom: 2.5rem; scroll-margin-top: 90px; }
+    .section-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--indigo-100); color: var(--indigo);
+      font-size: 0.78rem; font-weight: 700;
+      margin-right: 0.6rem; flex-shrink: 0;
+    }
+    .section h2 { font-size: 1.15rem; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem; display: flex; align-items: center; letter-spacing: -0.01em; }
+    .section p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.8; margin-bottom: 0.8rem; }
+    .section ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
+    .section ul li { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; display: flex; align-items: flex-start; gap: 0.6rem; }
+    .section ul li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--indigo); flex-shrink: 0; margin-top: 0.5rem; }
+
+    .data-table {
+      width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem;
+    }
+    .data-table th {
+      background: var(--indigo-50); color: var(--indigo);
+      font-weight: 700; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.75rem 1rem; text-align: left; border-bottom: 2px solid var(--indigo-100);
+    }
+    .data-table td {
+      padding: 0.75rem 1rem; color: var(--gray-600); border-bottom: 1px solid var(--gray-100);
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--gray-50); }
+
+    .badge-no {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: var(--green-50); color: var(--green);
+      font-size: 0.72rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 100px;
+      border: 1px solid var(--green-100);
+    }
+    .badge-yes {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: #fff7ed; color: #c2410c;
+      font-size: 0.72rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 100px;
+      border: 1px solid #fed7aa;
+    }
+
+    .highlight-box {
+      background: var(--indigo-50); border: 1px solid var(--indigo-100);
+      border-left: 3px solid var(--indigo);
+      border-radius: 10px; padding: 1rem 1.2rem;
+      font-size: 0.88rem; color: var(--gray-700); line-height: 1.7; margin: 1rem 0;
+    }
+    .green-box {
+      background: var(--green-50); border: 1px solid var(--green-100);
+      border-left: 3px solid var(--green);
+      border-radius: 10px; padding: 1rem 1.2rem;
+      font-size: 0.88rem; color: #166534; line-height: 1.7; margin: 1rem 0;
+    }
+    .divider { border: none; border-top: 1px solid var(--gray-200); margin: 2rem 0; }
+
+    .page-footer {
+      background: white; border-top: 1px solid var(--gray-200);
+      padding: 1.5rem 2rem; text-align: center;
+      font-size: 0.83rem; color: var(--gray-400);
+    }
+    .page-footer a { color: var(--indigo); text-decoration: none; }
+    .page-footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) { .summary-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    PhishGuard
+  </a>
+  <a href="/" class="back-link">← Back to Home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">🔒 Privacy Document</div>
+  <h1>Privacy Policy</h1>
+  <p>We believe in full transparency. Here's exactly what data we collect, how we use it, and how we protect it.</p>
+</div>
+
+<div class="content-wrap">
+
+  <!-- At-a-glance summary -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <span class="s-icon">📭</span>
+      <div class="s-label">No Selling of Data</div>
+      <div class="s-val">We never sell your data to third parties</div>
+    </div>
+    <div class="summary-card">
+      <span class="s-icon">🍪</span>
+      <div class="s-label">No Tracking Cookies</div>
+      <div class="s-val">Only essential session cookies used</div>
+    </div>
+    <div class="summary-card">
+      <span class="s-icon">📊</span>
+      <div class="s-label">No Analytics</div>
+      <div class="s-val">No Google Analytics or ad tracking</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-card">
+    <div class="toc-title">📑 Table of Contents</div>
+    <ul class="toc-list">
+      <li><a href="#p1">1. Who We Are</a></li>
+      <li><a href="#p2">2. What Data We Collect</a></li>
+      <li><a href="#p3">3. How We Use Your Data</a></li>
+      <li><a href="#p4">4. Data Storage</a></li>
+      <li><a href="#p5">5. Third-Party Services</a></li>
+      <li><a href="#p6">6. Your Rights</a></li>
+      <li><a href="#p7">7. Children's Privacy</a></li>
+      <li><a href="#p8">8. Changes to This Policy</a></li>
+      <li><a href="#p9">9. Contact</a></li>
+    </ul>
+  </div>
+
+  <div class="main-card">
+    <div class="last-updated">🕐 Last updated: March 2026</div>
+
+    <div class="section" id="p1">
+      <h2><span class="section-num">1</span>Who We Are</h2>
+      <p>PhishGuard is an academic project by <strong>Rishi Kant</strong>, a Computer Science student. This is a non-commercial, educational tool hosted for demonstration and learning purposes. There is no company, organization, or commercial entity behind this service.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p2">
+      <h2><span class="section-num">2</span>What Data We Collect</h2>
+      <p>We collect minimal data — only what is necessary to operate the tool:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Data Type</th>
+            <th>When Collected</th>
+            <th>Stored?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>URL submitted for scanning</td>
+            <td>When you click "Scan Now"</td>
+            <td><span class="badge-no">✓ Not stored</span></td>
+          </tr>
+          <tr>
+            <td>Email address</td>
+            <td>When you subscribe to newsletter</td>
+            <td><span class="badge-yes">Stored locally</span></td>
+          </tr>
+          <tr>
+            <td>Contact form data (name, email, message)</td>
+            <td>When you submit a support request</td>
+            <td><span class="badge-no">✓ Not stored</span></td>
+          </tr>
+          <tr>
+            <td>Session cookie</td>
+            <td>Automatically on page visit</td>
+            <td><span class="badge-yes">Session only</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="green-box">
+        ✅ We do <strong>not</strong> collect your IP address, browser fingerprint, location data, device info, or any personally identifiable information beyond what you voluntarily provide.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p3">
+      <h2><span class="section-num">3</span>How We Use Your Data</h2>
+      <p>The data we collect is used only for:</p>
+      <ul>
+        <li>Processing URL scan requests through the ML model (URLs are not logged)</li>
+        <li>Sending you project updates if you subscribed to the newsletter</li>
+        <li>Responding to your support/contact requests via print logs (server-side only)</li>
+        <li>Maintaining your session between page loads (Flask session cookie)</li>
+      </ul>
+      <div class="highlight-box">
+        📌 We do <strong>not</strong> use your data for advertising, profiling, marketing to third parties, or any purpose beyond operating the tool.
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p4">
+      <h2><span class="section-num">4</span>Data Storage</h2>
+      <p>Newsletter email addresses are stored in a plain text file (<code style="background:var(--gray-100);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.85rem;">subscribers.txt</code>) on the server. This file is:</p>
+      <ul>
+        <li>Not shared with any third party</li>
+        <li>Not encrypted (emails only — no passwords or sensitive data)</li>
+        <li>Accessible only to the server administrator (Rishi Kant)</li>
+      </ul>
+      <p style="margin-top:0.8rem;">To request removal of your email from this list, contact us via the <a href="/contact" style="color:var(--indigo);font-weight:600;">support page</a>.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p5">
+      <h2><span class="section-num">5</span>Third-Party Services</h2>
+      <p>PhishGuard uses the following third-party resources (all loaded from CDNs):</p>
+      <ul>
+        <li><strong>Google Fonts</strong> — for typography (Plus Jakarta Sans). Google may log font requests.</li>
+        <li><strong>Bootstrap CDN (jsDelivr)</strong> — for layout utilities. jsDelivr may log requests.</li>
+      </ul>
+      <p style="margin-top:0.8rem;">We do <strong>not</strong> use Google Analytics, Facebook Pixel, any ad networks, or any other tracking services.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p6">
+      <h2><span class="section-num">6</span>Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request deletion of your newsletter email subscription at any time</li>
+        <li>Ask what data we hold about you (we hold very little)</li>
+        <li>Opt out of newsletter communications by contacting us directly</li>
+      </ul>
+      <p style="margin-top:0.8rem;">To exercise any of these rights, use the <a href="/contact" style="color:var(--indigo);font-weight:600;">Contact Support</a> page.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p7">
+      <h2><span class="section-num">7</span>Children's Privacy</h2>
+      <p>PhishGuard is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe a child has submitted personal information through this service, please contact us immediately.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p8">
+      <h2><span class="section-num">8</span>Changes to This Policy</h2>
+      <p>This Privacy Policy may be updated occasionally to reflect changes in the project. Updates will be posted on this page with a revised date. We encourage you to review this page periodically.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="p9">
+      <h2><span class="section-num">9</span>Contact</h2>
+      <p>For any privacy-related concerns, please reach out via the <a href="/contact" style="color:var(--indigo);font-weight:600;">Contact Support</a> page or connect on <a href="https://www.linkedin.com/in/rishi-kant-433b35287" target="_blank" style="color:var(--indigo);font-weight:600;">LinkedIn</a>.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-footer">
+  © 2026 PhishGuard — Built by Rishi Kant &nbsp;·&nbsp;
+  <a href="/terms">Terms of Service</a> &nbsp;·&nbsp;
+  <a href="/cookies">Cookie Settings</a> &nbsp;·&nbsp;
+  <a href="/">Back to Scanner</a>
+</div>
+
+</body>
+</html>

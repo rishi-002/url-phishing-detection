@@ -1,42 +1,289 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Contact Support</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact Support — PhishGuard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5;
+      --indigo-light: #6366f1;
+      --indigo-dark: #3730a3;
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --safe: #10b981;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--gray-800); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .back-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.45rem 0.9rem; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    /* HERO STRIP */
+    .contact-hero {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 3.5rem 2rem 5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .contact-hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 800;
+      color: white; letter-spacing: -0.03em; margin-bottom: 0.75rem; position: relative;
+    }
+    .contact-hero p {
+      font-size: 1rem; color: rgba(255,255,255,0.8);
+      max-width: 440px; margin: 0 auto; line-height: 1.6; position: relative;
+    }
+
+    /* MAIN CARD (pulls up over hero) */
+    .contact-main {
+      max-width: 960px;
+      margin: -3rem auto 4rem;
+      padding: 0 2rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 0;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.06);
+    }
+
+    /* LEFT */
+    .contact-left {
+      background: linear-gradient(160deg, var(--indigo-50) 0%, white 100%);
+      padding: 3rem 2.5rem;
+      border-right: 1px solid var(--gray-200);
+    }
+    .contact-left h2 {
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.02em; color: var(--gray-800);
+      margin-bottom: 0.5rem;
+    }
+    .contact-left > p {
+      font-size: 0.87rem; color: var(--gray-500);
+      line-height: 1.7; margin-bottom: 2rem;
+    }
+
+    .info-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1rem; border-radius: 14px;
+      border: 1px solid var(--gray-200);
+      background: white;
+      margin-bottom: 0.85rem;
+      transition: all 0.2s;
+    }
+    .info-item:hover { border-color: #a5b4fc; box-shadow: 0 4px 16px rgba(79,70,229,0.08); transform: translateX(3px); }
+    .info-item-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--indigo-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .info-item-text strong { display: block; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .info-item-text span { font-size: 0.78rem; color: var(--gray-500); line-height: 1.5; }
+
+    /* RIGHT (FORM) */
+    .contact-right { padding: 3rem 2.5rem; }
+    .form-title {
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 0.4rem;
+    }
+    .form-sub { font-size: 0.87rem; color: var(--gray-500); margin-bottom: 2rem; }
+
+    .success-banner {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: var(--safe);
+      font-size: 0.88rem; font-weight: 600;
+      padding: 0.9rem 1.1rem; border-radius: 10px;
+      margin-bottom: 1.5rem; display: none;
+      align-items: center; gap: 0.5rem;
+    }
+    .success-banner.show { display: flex; }
+
+    .field { margin-bottom: 1.3rem; }
+    label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      color: var(--gray-600); margin-bottom: 0.45rem; letter-spacing: 0.02em;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%; font-family: var(--font); font-size: 0.9rem;
+      padding: 0.8rem 1rem;
+      background: var(--gray-50); color: var(--gray-800);
+      border: 1.5px solid var(--gray-200); border-radius: 10px;
+      outline: none; resize: none; transition: all 0.2s;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 4px rgba(79,70,229,0.08);
+      background: white;
+    }
+    input::placeholder, textarea::placeholder { color: var(--gray-400); }
+    textarea { min-height: 120px; }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; border: none;
+      font-family: var(--font); font-size: 0.92rem; font-weight: 700;
+      padding: 0.95rem; border-radius: 10px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .submit-btn:hover {
+      background: linear-gradient(135deg, var(--indigo-dark), var(--indigo));
+      box-shadow: 0 6px 20px rgba(79,70,229,0.35);
+      transform: translateY(-1px);
+    }
+    .submit-btn:active { transform: translateY(0); }
+
+    @media (max-width: 700px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-left { border-right: none; border-bottom: 1px solid var(--gray-200); }
+    }
+  </style>
 </head>
+<body>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    PhishGuard
+  </a>
+  <a href="/" class="back-link">← Back to Scanner</a>
+</nav>
 
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
+<div class="contact-hero">
+  <h1>Contact Support</h1>
+  <p>Have a question, found a bug, or want to report a misclassified URL? We're here to help.</p>
+</div>
 
-        <h2 class="text-2xl font-bold text-center mb-6">Contact Support</h2>
+<div class="contact-main">
+  <div class="contact-grid">
 
-        <form method="POST">
+    <!-- LEFT -->
+    <div class="contact-left">
+      <h2>Get in Touch</h2>
+      <p>Send us a message and we'll get back to you as soon as possible.</p>
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold">Name</label>
-                <input type="text" name="name" required class="w-full mt-1 border rounded-lg px-4 py-2">
-            </div>
+      <div class="info-item">
+        <div class="info-item-icon">📩</div>
+        <div class="info-item-text">
+          <strong>Email Support</strong>
+          <span>Expect a response within 24–48 hours</span>
+        </div>
+      </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold">Email</label>
-                <input type="email" name="email" required class="w-full mt-1 border rounded-lg px-4 py-2">
-            </div>
+      <div class="info-item">
+        <div class="info-item-icon">🐛</div>
+        <div class="info-item-text">
+          <strong>Bug Reports</strong>
+          <span>Describe the issue and steps to reproduce it</span>
+        </div>
+      </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-semibold">Message</label>
-                <textarea name="message" rows="4" required class="w-full mt-1 border rounded-lg px-4 py-2"></textarea>
-            </div>
+      <div class="info-item">
+        <div class="info-item-icon">🔗</div>
+        <div class="info-item-text">
+          <strong>False Positives</strong>
+          <span>Report URLs that were incorrectly classified</span>
+        </div>
+      </div>
 
-            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700">
-                Send Message
-            </button>
-
-        </form>
-
+      <div class="info-item">
+        <div class="info-item-icon">💡</div>
+        <div class="info-item-text">
+          <strong>Feature Requests</strong>
+          <span>Suggest new ideas to improve PhishGuard</span>
+        </div>
+      </div>
     </div>
 
-</body>
+    <!-- RIGHT -->
+    <div class="contact-right">
+      <h2 class="form-title">Send a Message</h2>
+      <p class="form-sub">Fill out the form below and we'll get back to you shortly.</p>
 
+      <div class="success-banner" id="successBanner">
+        ✅ Message sent! We'll get back to you within 24–48 hours.
+      </div>
+
+      <form method="POST" action="/contact">
+        <div class="field">
+          <label for="name">Full Name</label>
+          <input type="text" name="name" id="name" placeholder="Your full name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" name="email" id="email" placeholder="your@email.com" required>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea name="message" id="message" placeholder="Describe your issue, question, or feedback in detail..." required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">Send Message →</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  if (window.location.search.includes('sent=1')) {
+    document.getElementById('successBanner').classList.add('show');
+  }
+</script>
+</body>
 </html>
