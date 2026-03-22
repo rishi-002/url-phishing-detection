@@ -45,6 +45,41 @@ def index():
     return render_template("index.html", predict=predict)
 
 
+# API for Chrome extension — checks a URL and returns phishing/safe
+@app.route("/api/check", methods=["POST", "OPTIONS"])
+def api_check():
+    # Allow requests from the Chrome extension
+    if request.method == "OPTIONS":
+        response = jsonify({})
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Methods"] = "POST"
+        return response
+
+    global scan_count, phishing_count, safe_count
+
+    data = request.get_json()
+    if not data or "url" not in data:
+        return jsonify({"error": "No URL provided"}), 400
+
+    url = data["url"]
+    cleaned_url = re.sub(r'^https?://(www\.)?', '', url)
+
+    result = model.predict(vector.transform([cleaned_url]))[0]
+    scan_count += 1
+
+    if result == "bad":
+        phishing_count += 1
+        label = "phishing"
+    else:
+        safe_count += 1
+        label = "safe"
+
+    response = jsonify({"url": url, "result": label})
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
+
 # API for live stats
 @app.route("/stats")
 def stats():
@@ -74,6 +109,11 @@ def contact():
         return redirect(url_for('contact') + '?sent=1')
 
     return render_template("contact.html")
+
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 
 @app.route("/terms")

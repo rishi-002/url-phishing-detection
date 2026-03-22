@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About Us — URLiar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5;
+      --indigo-light: #6366f1;
+      --indigo-dark: #3730a3;
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --serif: 'Instrument Serif', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--white); color: var(--gray-800); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--gray-800); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .back-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.45rem 0.9rem;
+      border-radius: 8px; transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      background: linear-gradient(160deg, var(--indigo-50) 0%, var(--white) 60%);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 65%);
+      border-radius: 50%;
+      top: -300px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    /* Floating dots decoration */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 100%; height: 100%;
+      top: 0; left: 0;
+      background-image: radial-gradient(circle, var(--indigo-200) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--indigo-100); color: var(--indigo);
+      font-size: 0.75rem; font-weight: 700;
+      padding: 0.4rem 1.1rem; border-radius: 100px;
+      margin-bottom: 1.5rem; letter-spacing: 0.04em; text-transform: uppercase;
+      animation: fadeDown 0.5s ease both;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--gray-800);
+      margin-bottom: 1.2rem;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--indigo);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--gray-500);
+      max-width: 540px; margin: 0 auto 2rem;
+      line-height: 1.7;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-tags {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--gray-600);
+      background: white; border: 1px solid var(--gray-200);
+      padding: 0.4rem 0.9rem; border-radius: 100px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    /* ── COLLEGE BANNER ── */
+    .college-banner {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .college-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .college-inner { position: relative; z-index: 1; }
+    .college-icon {
+      font-size: 2.5rem; margin-bottom: 0.75rem; display: block;
+    }
+    .college-name {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 800; color: white;
+      letter-spacing: -0.02em; margin-bottom: 0.4rem;
+    }
+    .college-sub {
+      font-size: 0.88rem; color: rgba(255,255,255,0.75);
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .college-sub span {
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+
+    /* ── TEAM SECTION ── */
+    .team-section {
+      padding: 6rem 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--indigo); background: var(--indigo-100);
+      padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 400; color: var(--gray-800);
+      letter-spacing: -0.01em;
+    }
+    .section-title em { font-style: italic; color: var(--indigo); }
+
+    /* Profile cards — asymmetric large layout */
+    .profiles { display: flex; flex-direction: column; gap: 5rem; }
+
+    .profile-card {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .profile-card.reverse { grid-template-columns: 1fr 340px; }
+    .profile-card.reverse .profile-visual { order: 2; }
+    .profile-card.reverse .profile-info { order: 1; }
+
+    /* Visual side */
+    .profile-visual { position: relative; }
+
+    .avatar-frame {
+      width: 280px; height: 280px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .avatar-bg {
+      position: absolute; inset: 0;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--indigo-50), var(--indigo-100));
+      transform: rotate(3deg);
+      transition: transform 0.4s;
+    }
+    .profile-card:hover .avatar-bg { transform: rotate(6deg); }
+
+    .avatar-bg-2 {
+      position: absolute; inset: 0;
+      border-radius: 30px;
+      border: 2px solid var(--indigo-200);
+      transform: rotate(-2deg);
+      transition: transform 0.4s;
+    }
+    .profile-card:hover .avatar-bg-2 { transform: rotate(-4deg); }
+
+    .avatar-img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(79,70,229,0.15);
+    }
+    .avatar-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      transition: transform 0.5s;
+    }
+    .profile-card:hover .avatar-img img { transform: scale(1.04); }
+
+    /* Number badge */
+    .profile-num {
+      position: absolute;
+      top: -14px; right: -14px;
+      width: 44px; height: 44px;
+      background: var(--indigo);
+      color: white; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 800;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.4);
+      z-index: 2;
+    }
+
+    /* Role badge */
+    .role-badge {
+      position: absolute;
+      bottom: -16px; left: 50%; transform: translateX(-50%);
+      background: white; border: 1.5px solid var(--indigo-200);
+      color: var(--indigo); font-size: 0.78rem; font-weight: 700;
+      padding: 0.4rem 1.1rem; border-radius: 100px;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(79,70,229,0.12);
+      z-index: 2;
+    }
+
+    /* Info side */
+    .profile-info { padding: 1rem 0; }
+
+    .profile-name {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      font-weight: 400; letter-spacing: -0.02em;
+      color: var(--gray-800); margin-bottom: 0.3rem;
+      line-height: 1.1;
+    }
+    .profile-name em { font-style: italic; color: var(--indigo); }
+
+    .profile-title {
+      font-size: 0.82rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray-400); margin-bottom: 1.5rem;
+    }
+
+    .profile-bio {
+      font-size: 0.95rem; color: var(--gray-600);
+      line-height: 1.8; margin-bottom: 1.8rem;
+      border-left: 3px solid var(--indigo-200);
+      padding-left: 1.2rem;
+    }
+
+    /* Skills */
+    .skills-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gray-400); margin-bottom: 0.75rem;
+    }
+
+    .skills-wrap {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .skill-chip {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--indigo);
+      background: var(--indigo-50);
+      border: 1px solid var(--indigo-100);
+      padding: 0.35rem 0.85rem; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .skill-chip:hover {
+      background: var(--indigo-100);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(79,70,229,0.15);
+    }
+
+    /* Social links */
+    .social-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+    .social-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; padding: 0.55rem 1.1rem;
+      border-radius: 10px; transition: all 0.2s;
+    }
+    .social-btn.linkedin {
+      background: #eff6ff; color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+    .social-btn.linkedin:hover {
+      background: #dbeafe;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(29,78,216,0.15);
+    }
+    .social-btn.twitter {
+      background: var(--gray-100); color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+    }
+    .social-btn.twitter:hover {
+      background: var(--gray-200);
+      transform: translateY(-2px);
+    }
+    .social-btn.github {
+      background: #f0fdf4; color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .social-btn.github:hover {
+      background: #dcfce7;
+      transform: translateY(-2px);
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      max-width: 1100px; margin: 0 auto;
+      border: none; border-top: 1px solid var(--gray-200);
+    }
+
+    /* ── PROJECT SECTION ── */
+    .project-section {
+      padding: 6rem 2rem;
+      background: var(--gray-50);
+    }
+
+    .project-card {
+      max-width: 900px; margin: 3rem auto 0;
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+
+    .project-visual {
+      background: linear-gradient(135deg, var(--indigo) 0%, #818cf8 100%);
+      padding: 3rem 2.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .project-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .project-icon {
+      font-size: 3.5rem; margin-bottom: 1rem; position: relative;
+    }
+    .project-name {
+      font-size: 1.8rem; font-weight: 800;
+      color: white; letter-spacing: -0.03em;
+      margin-bottom: 0.5rem; position: relative;
+    }
+    .project-type {
+      font-size: 0.78rem; font-weight: 700;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      position: relative;
+    }
+
+    .project-stats {
+      display: flex; gap: 1.5rem; position: relative;
+    }
+    .proj-stat { color: white; }
+    .proj-stat-num { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .proj-stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.65); margin-top: 0.15rem; }
+
+    .project-info { padding: 2.5rem; }
+
+    .project-info h3 {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--indigo); margin-bottom: 0.75rem;
+    }
+
+    .project-info p {
+      font-size: 0.9rem; color: var(--gray-600);
+      line-height: 1.75; margin-bottom: 1.5rem;
+    }
+
+    .tech-stack { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+
+    .tech-chip {
+      font-size: 0.75rem; font-weight: 600;
+      background: var(--gray-100); color: var(--gray-600);
+      border: 1px solid var(--gray-200);
+      padding: 0.3rem 0.7rem; border-radius: 6px;
+    }
+
+    .project-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; text-decoration: none;
+      font-size: 0.85rem; font-weight: 700;
+      padding: 0.7rem 1.4rem; border-radius: 10px;
+      transition: all 0.2s;
+    }
+    .project-link:hover {
+      box-shadow: 0 4px 16px rgba(79,70,229,0.35);
+      transform: translateY(-1px);
+      color: white;
+    }
+
+    /* ── VALUES SECTION ── */
+    .values-section {
+      padding: 6rem 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+
+    .value-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 20px; padding: 2rem 1.5rem;
+      text-align: center; transition: all 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .value-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--indigo), var(--indigo-light));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+    }
+    .value-card:hover {
+      border-color: var(--indigo-200);
+      box-shadow: 0 12px 40px rgba(79,70,229,0.1);
+      transform: translateY(-4px);
+    }
+    .value-card:hover::before { transform: scaleX(1); }
+
+    .value-icon {
+      font-size: 2rem; margin-bottom: 1rem; display: block;
+    }
+    .value-title {
+      font-size: 0.92rem; font-weight: 700; color: var(--gray-800);
+      margin-bottom: 0.5rem;
+    }
+    .value-desc {
+      font-size: 0.82rem; color: var(--gray-500); line-height: 1.6;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-section h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; color: white;
+      letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .cta-section h2 em { font-style: italic; }
+    .cta-section p {
+      font-size: 1rem; color: rgba(255,255,255,0.8);
+      max-width: 460px; margin: 0 auto 2rem; line-height: 1.6;
+    }
+    .cta-btns { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: white; color: var(--indigo);
+      font-family: var(--font); font-size: 0.9rem; font-weight: 700;
+      padding: 0.85rem 2rem; border-radius: 12px;
+      text-decoration: none; transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); color: var(--indigo); }
+
+    .btn-outline-white {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: white;
+      font-family: var(--font); font-size: 0.9rem; font-weight: 700;
+      padding: 0.85rem 2rem; border-radius: 12px;
+      border: 2px solid rgba(255,255,255,0.4);
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: white; color: white; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Scroll-reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .profile-card, .profile-card.reverse { grid-template-columns: 1fr; text-align: center; }
+      .profile-card.reverse .profile-visual { order: 1; }
+      .profile-card.reverse .profile-info { order: 2; }
+      .avatar-frame { width: 220px; height: 220px; }
+      .profile-bio { border-left: none; padding-left: 0; border-top: 3px solid var(--indigo-200); padding-top: 1rem; }
+      .skills-wrap, .social-links { justify-content: center; }
+      .project-card { grid-template-columns: 1fr; }
+      .values-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 560px) {
+      .values-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    URLiar
+  </a>
+  <a href="/" class="back-link">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">👋 Meet the Team</div>
+    <h1>The minds behind<br><em>URLiar</em></h1>
+    <p class="hero-sub">
+      Two final-year B.Tech Computer Science students who got tired of phishing websites lying to people — so they built something to expose them.
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">🔐 Cybersecurity</span>
+      <span class="hero-tag">🤖 Machine Learning</span>
+      <span class="hero-tag">🌐 Web Development</span>
+      <span class="hero-tag">☁️ Cloud Computing</span>
+    </div>
+  </div>
+</section>
+
+<!-- COLLEGE BANNER -->
+<div class="college-banner">
+  <div class="college-inner">
+    <span class="college-icon">🎓</span>
+    <div class="college-name">United College of Engineering and Research</div>
+    <div class="college-sub">
+      <span>📍 Prayagraj, Uttar Pradesh</span>
+      <span>💻 B.Tech — Computer Science & Engineering</span>
+      <span>🎓 Final Year · Batch 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<section class="team-section">
+  <div class="section-header reveal">
+    <div class="section-tag">Our Team</div>
+    <h2 class="section-title">The people who built <em>this</em></h2>
+  </div>
+
+  <div class="profiles">
+
+    <!-- ── RISHI ── -->
+    <div class="profile-card reveal">
+      <div class="profile-visual">
+        <div class="avatar-frame">
+          <div class="avatar-bg"></div>
+          <div class="avatar-bg-2"></div>
+          <div class="avatar-img">
+            <img src="{{ url_for('static', filename='rkml.jpg') }}" alt="Rishi Kant" />
+          </div>
+          <div class="profile-num">01</div>
+          <div class="role-badge">🚀 Web Developer</div>
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h2 class="profile-name">Rishi <em>Kant</em></h2>
+        <p class="profile-title"> Web Developer · CSE Student</p>
+
+        <p class="profile-bio">
+          A final-year CSE student at UCER with a deep passion for cybersecurity and machine learning. Rishi led the development of URLiar — from training the ML model to designing and building the full-stack web application. He enjoys combining security research with intelligent systems to solve real-world problems.
+        </p>
+
+        <p class="skills-label">Skills & Interests</p>
+        <div class="skills-wrap">
+          <span class="skill-chip">🔐 Cybersecurity</span>
+          <span class="skill-chip">🤖 Machine Learning</span>
+          <span class="skill-chip">🐍 Python / Flask</span>
+          <span class="skill-chip">🌐 Web Development</span>
+          <span class="skill-chip">☁️ Cloud Computing</span>
+          <span class="skill-chip">📊 Scikit-learn</span>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/rishi-kant-433b35287" target="_blank" class="social-btn linkedin">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://x.com/_rishi02" target="_blank" class="social-btn twitter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+            Twitter / X
+          </a>
+          <a href="https://github.com/rishi-002" target="_blank" class="social-btn github">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- ── RIYA ── -->
+    <div class="profile-card reverse reveal">
+      <div class="profile-visual">
+        <div class="avatar-frame">
+          <div class="avatar-bg" style="background: linear-gradient(135deg,#fce7f3,#fbcfe8);"></div>
+          <div class="avatar-bg-2" style="border-color:#f9a8d4;"></div>
+          <div class="avatar-img">
+            <img src="{{ url_for('static', filename='robo.jpg') }}" alt="Riya Yadav" />
+          </div>
+          <div class="profile-num" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">02</div>
+          <div class="role-badge" style="border-color:#fbcfe8;color:#be185d;">💻 Web Developer</div>
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h2 class="profile-name">Riya <em style="color:#ec4899;">Yadav</em></h2>
+        <p class="profile-title">Web Developer · CSE Student</p>
+
+        <p class="profile-bio">
+          A final-year CSE student at UCER with a keen eye for design and a strong interest in building intuitive web interfaces. Riya contributed to the front-end development of URLiar, bringing creativity and attention to detail that shaped the user experience of the application.
+        </p>
+
+        <p class="skills-label">Skills & Interests</p>
+        <div class="skills-wrap">
+          <span class="skill-chip" style="color:#be185d;background:#fdf2f8;border-color:#fbcfe8;">🎨 UI/UX Design</span>
+          <span class="skill-chip" style="color:#be185d;background:#fdf2f8;border-color:#fbcfe8;">🌐 Web Development</span>
+          <span class="skill-chip" style="color:#be185d;background:#fdf2f8;border-color:#fbcfe8;">🔐 Cybersecurity</span>
+          <span class="skill-chip" style="color:#be185d;background:#fdf2f8;border-color:#fbcfe8;">🤖 Machine Learning</span>
+          <span class="skill-chip" style="color:#be185d;background:#fdf2f8;border-color:#fbcfe8;">☁️ Cloud Computing</span>
+        </div>
+
+        <div class="social-links">
+          <a href="#" class="social-btn linkedin">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            LinkedIn
+          </a>
+          <a href="#" class="social-btn twitter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+            Twitter / X
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROJECT -->
+<section class="project-section">
+  <div style="max-width:1100px; margin:0 auto;">
+    <div class="section-header reveal">
+      <div class="section-tag">Featured Project</div>
+      <h2 class="section-title">What we <em>built</em> together</h2>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-visual">
+        <div>
+          <div class="project-icon">🛡️</div>
+          <div class="project-name">URLiar</div>
+          <div class="project-type">Phishing Detection System</div>
+        </div>
+        <div class="project-stats">
+          <div class="proj-stat">
+            <div class="proj-stat-num">~97%</div>
+            <div class="proj-stat-label">Accuracy</div>
+          </div>
+          <div class="proj-stat">
+            <div class="proj-stat-num">550K+</div>
+            <div class="proj-stat-label">URLs Trained</div>
+          </div>
+          <div class="proj-stat">
+            <div class="proj-stat-num">2</div>
+            <div class="proj-stat-label">Builders</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-info">
+        <h3>About the Project</h3>
+        <p>
+          URLiar is a machine learning–powered phishing website detection system. Users submit any URL and the system analyzes its structure using a TF-IDF vectorizer and Logistic Regression model — trained on over 550,000 real-world URLs — to classify it as safe or phishing in real time.
+        </p>
+
+        <div class="tech-stack">
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">Flask</span>
+          <span class="tech-chip">Scikit-learn</span>
+          <span class="tech-chip">TF-IDF</span>
+          <span class="tech-chip">Logistic Regression</span>
+          <span class="tech-chip">HTML / CSS</span>
+          <span class="tech-chip">JavaScript</span>
+          <span class="tech-chip">Bootstrap</span>
+        </div>
+
+        <a href="/" class="project-link">🚀 Try URLiar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <div class="section-header reveal">
+    <div class="section-tag">What Drives Us</div>
+    <h2 class="section-title">Our <em>values</em> & focus areas</h2>
+  </div>
+
+  <div class="values-grid">
+    <div class="value-card reveal reveal-delay-1">
+      <span class="value-icon">🔐</span>
+      <div class="value-title">Security First</div>
+      <div class="value-desc">We believe cybersecurity is a fundamental right. Building tools that protect everyday users is our core motivation.</div>
+    </div>
+    <div class="value-card reveal reveal-delay-2">
+      <span class="value-icon">🤖</span>
+      <div class="value-title">Intelligent Systems</div>
+      <div class="value-desc">Applying ML to solve real problems — not just as theory, but as practical systems people actually use.</div>
+    </div>
+    <div class="value-card reveal reveal-delay-3">
+      <span class="value-icon">🌐</span>
+      <div class="value-title">Open Web</div>
+      <div class="value-desc">We build for the web because it's where people live — and where they need protection the most.</div>
+    </div>
+    <div class="value-card reveal reveal-delay-4">
+      <span class="value-icon">📚</span>
+      <div class="value-title">Continuous Learning</div>
+      <div class="value-desc">As final-year students, we're always exploring — from new ML techniques to cloud infrastructure and beyond.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Want to <em>connect</em> with us?</h2>
+    <p>We're open to collaboration, internship opportunities, and feedback on our work. Feel free to reach out!</p>
+    <div class="cta-btns">
+      <a href="/contact" class="btn-white">📩 Contact Us</a>
+      <a href="/" class="btn-outline-white">🛡️ Try URLiar</a>
+    </div>
+  </div>
+</section>
+
+{% include "footer.html" %}
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cookie Settings — PhishGuard</title>
+  <title>Cookie Settings — URLiar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -166,7 +166,7 @@
 <nav>
   <a href="/" class="nav-logo">
     <div class="nav-logo-icon">🛡️</div>
-    PhishGuard
+    URLiar
   </a>
   <a href="/" class="back-link">← Back to Home</a>
 </nav>
@@ -174,7 +174,7 @@
 <div class="hero">
   <div class="hero-badge">🍪 Cookie Preferences</div>
   <h1>Cookie Settings</h1>
-  <p>We keep it simple — PhishGuard only uses essential cookies. No tracking, no ads, no third-party profiling.</p>
+  <p>We keep it simple — URLiar only uses essential cookies. No tracking, no ads, no third-party profiling.</p>
 </div>
 
 <div class="content-wrap">
@@ -184,9 +184,9 @@
     <!-- What are cookies -->
     <div class="section">
       <h2><span class="section-num">1</span>What Are Cookies?</h2>
-      <p>Cookies are small text files stored in your browser when you visit a website. They help the site remember things like your session between page loads. PhishGuard uses only the minimum cookies required to function.</p>
+      <p>Cookies are small text files stored in your browser when you visit a website. They help the site remember things like your session between page loads. URLiar uses only the minimum cookies required to function.</p>
       <div class="green-box">
-        ✅ PhishGuard uses <strong>zero tracking cookies</strong>. No Google Analytics, no Facebook Pixel, no advertising cookies of any kind.
+        ✅ URLiar uses <strong>zero tracking cookies</strong>. No Google Analytics, no Facebook Pixel, no advertising cookies of any kind.
       </div>
     </div>
 
@@ -209,7 +209,7 @@
           <span class="always-on">✓ Always On</span>
         </div>
         <div class="cookie-body">
-          <p>These cookies are set automatically by Flask (the web framework powering PhishGuard). They maintain your session as you navigate between pages — for example, ensuring your scan result is displayed correctly after form submission.</p>
+          <p>These cookies are set automatically by Flask (the web framework powering URLiar). They maintain your session as you navigate between pages — for example, ensuring your scan result is displayed correctly after form submission.</p>
           <p>These cookies are <strong>not optional</strong> — disabling them would break core site functionality. They contain no personally identifiable information.</p>
           <div class="cookie-detail-row">
             <div class="cookie-detail">
@@ -218,7 +218,7 @@
             </div>
             <div class="cookie-detail">
               <span>Provider</span>
-              <span>PhishGuard (Flask)</span>
+              <span>URLiar (Flask)</span>
             </div>
             <div class="cookie-detail">
               <span>Expiry</span>
@@ -251,7 +251,7 @@
           </div>
         </div>
         <div class="cookie-body">
-          <p>PhishGuard loads fonts (Google Fonts) and CSS frameworks (Bootstrap via jsDelivr) from external CDNs. These requests may cause those providers to set their own cookies or log your IP address as part of their standard operation.</p>
+          <p>URLiar loads fonts (Google Fonts) and CSS frameworks (Bootstrap via jsDelivr) from external CDNs. These requests may cause those providers to set their own cookies or log your IP address as part of their standard operation.</p>
           <p>We have no control over these third-party cookies. If you're concerned, you can disable this category — the site will still work but may appear with fallback system fonts.</p>
           <div class="cookie-detail-row">
             <div class="cookie-detail">
@@ -264,7 +264,7 @@
             </div>
             <div class="cookie-detail">
               <span>Tracking?</span>
-              <span>None by PhishGuard</span>
+              <span>None by URLiar</span>
             </div>
           </div>
         </div>
@@ -289,7 +289,7 @@
           </div>
         </div>
         <div class="cookie-body">
-          <p>PhishGuard does <strong>not</strong> use any analytics, advertising, or behavioral tracking cookies — and never will. This category is shown here only for full transparency. There is nothing to enable.</p>
+          <p>URLiar does <strong>not</strong> use any analytics, advertising, or behavioral tracking cookies — and never will. This category is shown here only for full transparency. There is nothing to enable.</p>
           <p style="color: #9ca3af; font-style: italic;">Google Analytics · Facebook Pixel · Hotjar · Ad networks — <strong>None of these are used.</strong></p>
         </div>
       </div>
@@ -331,7 +331,7 @@
 </div>
 
 <div class="page-footer">
-  © 2026 PhishGuard — Built by Rishi Kant &nbsp;·&nbsp;
+  © 2026 URLiar — Built by Rishi Kant &nbsp;·&nbsp;
   <a href="/terms">Terms of Service</a> &nbsp;·&nbsp;
   <a href="/privacy">Privacy Policy</a> &nbsp;·&nbsp;
   <a href="/">Back to Scanner</a>
@@ -340,7 +340,7 @@
 <script>
   // Load saved CDN preference
   window.addEventListener('load', () => {
-    const saved = localStorage.getItem('phishguard_cdn_cookies');
+    const saved = localStorage.getItem('urliar_cdn_cookies');
     if (saved === 'false') {
       document.getElementById('cdnToggle').checked = false;
       document.getElementById('cdnLabel').textContent = 'Disabled';
@@ -361,7 +361,7 @@
 
   function savePrefs() {
     const cdnEnabled = document.getElementById('cdnToggle').checked;
-    localStorage.setItem('phishguard_cdn_cookies', cdnEnabled);
+    localStorage.setItem('urliar_cdn_cookies', cdnEnabled);
     const msg = document.getElementById('savedMsg');
     msg.classList.add('show');
     setTimeout(() => msg.classList.remove('show'), 3000);
