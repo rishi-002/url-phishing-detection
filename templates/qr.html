@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#4f46e5">
+  <title>QR Scanner — URLiar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5;
+      --indigo-light: #6366f1;
+      --indigo-dark: #3730a3;
+      --indigo-50: #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --green: #10b981;
+      --green-50: #f0fdf4;
+      --green-100: #dcfce7;
+      --danger: #ef4444;
+      --danger-50: #fef2f2;
+      --danger-100: #fee2e2;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+    body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 800;
+      color: var(--gray-800); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a {
+      font-size: 0.88rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.5rem 0.9rem;
+      border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--indigo); background: var(--indigo-50); }
+    .back-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.45rem 0.9rem;
+      border-radius: 8px; transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 3.5rem 2rem 5rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.15); color: white;
+      font-size: 0.78rem; font-weight: 700;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.25);
+      position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 800;
+      color: white; letter-spacing: -0.03em;
+      margin-bottom: 0.75rem; position: relative;
+    }
+    .hero p {
+      font-size: 1rem; color: rgba(255,255,255,0.82);
+      max-width: 500px; margin: 0 auto; line-height: 1.65;
+      position: relative;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main-wrap {
+      max-width: 960px; margin: -3rem auto 4rem;
+      padding: 0 2rem;
+    }
+
+    /* ── TABS CARD ── */
+    .scanner-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 16px 50px rgba(79,70,229,0.1), 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    .tabs {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .tab-btn {
+      padding: 1.2rem 1rem; text-align: center;
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--gray-400); cursor: pointer;
+      border: none; background: transparent;
+      font-family: var(--font); transition: all 0.2s;
+      display: flex; align-items: center;
+      justify-content: center; gap: 0.5rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--indigo); }
+    .tab-btn.active {
+      color: var(--indigo);
+      border-bottom-color: var(--indigo);
+      background: var(--indigo-50);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+
+    /* ── UPLOAD PANEL ── */
+    .upload-left {
+      padding: 2.5rem;
+      border-right: 1px solid var(--gray-100);
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: 16px; padding: 2.5rem 1.5rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.3s; position: relative;
+      background: var(--gray-50); margin-bottom: 1.2rem;
+      min-height: 200px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .upload-zone:hover, .upload-zone.drag-over {
+      border-color: var(--indigo); background: var(--indigo-50);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 2.8rem; margin-bottom: 0.75rem; display: block; }
+    .upload-title { font-size: 0.92rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.3rem; }
+    .upload-sub { font-size: 0.78rem; color: var(--gray-400); }
+
+    .analyse-btn {
+      width: 100%; padding: 0.9rem;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; border: none;
+      font-family: var(--font); font-size: 0.92rem; font-weight: 700;
+      border-radius: 12px; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .analyse-btn:hover:not(:disabled) {
+      box-shadow: 0 6px 20px rgba(79,70,229,0.4);
+      transform: translateY(-1px);
+    }
+    .analyse-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .reset-btn {
+      width: 100%; padding: 0.8rem;
+      background: transparent; color: var(--gray-500);
+      border: 1.5px solid var(--gray-200);
+      font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+      border-radius: 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .reset-btn:hover { background: var(--gray-100); }
+
+    /* Upload right — preview + result */
+    .upload-right {
+      padding: 2.5rem;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--gray-50); min-height: 400px;
+    }
+
+    .preview-placeholder {
+      text-align: center; color: var(--gray-300);
+    }
+    .preview-placeholder .ph-icon { font-size: 4rem; margin-bottom: 0.75rem; display: block; }
+    .preview-placeholder p { font-size: 0.85rem; }
+
+    .preview-box { display: none; text-align: center; width: 100%; }
+    .preview-box.show { display: block; }
+    .preview-box img {
+      max-width: 200px; max-height: 200px;
+      border-radius: 14px;
+      border: 2px solid var(--indigo-100);
+      object-fit: contain; margin-bottom: 1rem;
+      box-shadow: 0 4px 16px rgba(79,70,229,0.1);
+    }
+
+    /* ── CAMERA PANEL ── */
+    .camera-left { padding: 2.5rem; border-right: 1px solid var(--gray-100); }
+
+    .camera-info-list {
+      list-style: none; display: flex; flex-direction: column; gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .camera-info-list li {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 0.88rem; color: var(--gray-600); line-height: 1.5;
+    }
+    .info-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--indigo-50); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    .start-cam-btn {
+      width: 100%; padding: 0.9rem;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; border: none;
+      font-family: var(--font); font-size: 0.92rem; font-weight: 700;
+      border-radius: 12px; cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+    .start-cam-btn:hover { box-shadow: 0 6px 20px rgba(79,70,229,0.4); transform: translateY(-1px); }
+
+    .stop-cam-btn {
+      width: 100%; padding: 0.8rem;
+      background: transparent; color: var(--danger);
+      border: 1.5px solid var(--danger-100);
+      font-family: var(--font); font-size: 0.85rem; font-weight: 600;
+      border-radius: 12px; cursor: pointer; transition: all 0.2s;
+      display: none;
+    }
+    .stop-cam-btn:hover { background: var(--danger-50); }
+
+    .camera-right {
+      background: #0f0f1a; position: relative; overflow: hidden;
+      min-height: 400px; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    .cam-placeholder {
+      text-align: center; color: rgba(255,255,255,0.3);
+      padding: 2rem;
+    }
+    .cam-placeholder .cam-ph-icon { font-size: 4rem; margin-bottom: 1rem; display: block; opacity: 0.4; }
+    .cam-placeholder p { font-size: 0.85rem; }
+
+    #videoFeed {
+      width: 100%; height: 100%;
+      object-fit: cover; display: none;
+      position: absolute; top: 0; left: 0;
+    }
+
+    .scan-overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      display: none; align-items: center; justify-content: center;
+    }
+    .scan-overlay.show { display: flex; }
+
+    .scan-frame {
+      width: 200px; height: 200px;
+      border: 2px solid rgba(79,70,229,0.8);
+      border-radius: 16px;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .scan-line {
+      position: absolute; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--indigo), transparent);
+      animation: scanMove 2s ease-in-out infinite;
+    }
+    @keyframes scanMove {
+      0% { top: 0; opacity: 1; }
+      90% { top: 100%; opacity: 0.5; }
+      100% { top: 0; opacity: 0; }
+    }
+
+    .corner {
+      position: absolute; width: 20px; height: 20px;
+      border-color: var(--indigo); border-style: solid;
+    }
+    .corner-tl { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+    .corner-tr { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+    .corner-bl { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+    .corner-br { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+
+    .cam-status {
+      position: absolute; bottom: 1rem; left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white; font-size: 0.75rem; font-weight: 600;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      white-space: nowrap; display: none;
+    }
+    .cam-status.show { display: block; }
+
+    /* ── RESULT BOX ── */
+    .result-box {
+      border-radius: 14px; padding: 1.2rem 1.4rem;
+      font-size: 0.9rem; font-weight: 600;
+      margin-top: 1rem; display: none; width: 100%;
+    }
+    .result-box.show { display: block; }
+    .result-box.safe { background: var(--green-50); color: #065f46; border: 1.5px solid var(--green-100); }
+    .result-box.phishing { background: var(--danger-50); color: #991b1b; border: 1.5px solid var(--danger-100); }
+    .result-box.checking { background: var(--indigo-50); color: var(--indigo); border: 1.5px solid var(--indigo-100); }
+    .result-box.warning { background: #fffbeb; color: #92400e; border: 1.5px solid #fde68a; }
+
+    .result-url {
+      font-family: var(--mono); font-size: 0.75rem;
+      font-weight: 400; word-break: break-all;
+      margin-top: 0.5rem; opacity: 0.7; line-height: 1.5;
+    }
+
+    /* ── HISTORY ── */
+    .history-section {
+      margin-top: 1.5rem; background: white;
+      border: 1px solid var(--gray-200); border-radius: 20px;
+      overflow: hidden;
+    }
+    .history-header {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .history-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .clear-btn {
+      font-size: 0.75rem; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); transition: color 0.2s;
+    }
+    .clear-btn:hover { color: var(--danger); }
+
+    .history-list { padding: 0.5rem 0; max-height: 300px; overflow-y: auto; }
+    .history-empty {
+      padding: 2rem; text-align: center;
+      font-size: 0.85rem; color: var(--gray-400);
+    }
+    .history-item {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.2s;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item:hover { background: var(--gray-50); }
+
+    .history-badge {
+      font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.65rem;
+      border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+    }
+    .history-badge.safe { background: var(--green-50); color: #065f46; border: 1px solid var(--green-100); }
+    .history-badge.phishing { background: var(--danger-50); color: #991b1b; border: 1px solid var(--danger-100); }
+
+    .history-url {
+      font-family: var(--mono); font-size: 0.78rem;
+      color: var(--gray-600); word-break: break-all;
+      flex: 1; line-height: 1.4;
+    }
+    .history-time { font-size: 0.72rem; color: var(--gray-400); white-space: nowrap; flex-shrink: 0; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      margin-top: 1.5rem; background: white;
+      border: 1px solid var(--gray-200); border-radius: 20px;
+      padding: 2rem;
+    }
+    .how-title {
+      font-size: 0.88rem; font-weight: 700; color: var(--gray-800);
+      margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .how-steps {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 1rem; position: relative;
+    }
+    .how-step {
+      text-align: center; padding: 1rem 0.5rem;
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--indigo-100); color: var(--indigo);
+      font-size: 0.85rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 0.6rem;
+    }
+    .step-icon { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
+    .step-label { font-size: 0.78rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.2rem; }
+    .step-desc { font-size: 0.72rem; color: var(--gray-500); line-height: 1.4; }
+
+    /* hidden canvas */
+    #decodeCanvas { display: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .panel.active { grid-template-columns: 1fr; }
+      .upload-right { min-height: 200px; padding: 1.5rem; border-top: 1px solid var(--gray-100); }
+      .camera-right { min-height: 280px; }
+      .how-steps { grid-template-columns: repeat(2,1fr); }
+      .upload-left, .camera-left { padding: 1.5rem; }
+      .main-wrap { padding: 0 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .how-steps { grid-template-columns: 1fr 1fr; }
+      .scan-frame { width: 160px; height: 160px; }
+      .hero { padding: 2.5rem 1.2rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    URLiar
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/qr" class="active">QR Scanner</a>
+    <a href="/about">About</a>
+  </div>
+  <a href="/" class="back-link">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📷 QR Code Security Check</div>
+  <h1>QR Code Scanner</h1>
+  <p>Don't blindly trust QR codes. Upload an image or use your live camera — URLiar decodes the QR and checks if the hidden URL is safe or a phishing trap.</p>
+</div>
+
+<div class="main-wrap">
+
+  <!-- SCANNER CARD -->
+  <div class="scanner-card">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('upload')" id="tab-upload">
+        📁 Upload QR Image
+      </button>
+      <button class="tab-btn" onclick="switchTab('camera')" id="tab-camera">
+        📷 Live Camera Scan
+      </button>
+    </div>
+
+    <!-- ── UPLOAD PANEL ── -->
+    <div class="panel active" id="panel-upload">
+
+      <div class="upload-left">
+        <p style="font-size:0.78rem;font-weight:700;color:var(--gray-500);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1rem;">Step 1 — Upload QR Image</p>
+
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="qrFileInput" accept="image/*" onchange="handleFileUpload(event)">
+          <span class="upload-icon">🖼️</span>
+          <div class="upload-title">Drop your QR image here</div>
+          <div class="upload-sub">or click to browse — JPG, PNG, WebP, GIF</div>
+        </div>
+
+        <button class="analyse-btn" id="analyseBtn" onclick="analyseUpload()" disabled>
+          🔍 Analyse QR Code
+        </button>
+        <button class="reset-btn" onclick="resetUpload()">↺ Reset & Scan Another</button>
+      </div>
+
+      <div class="upload-right">
+        <div class="preview-placeholder" id="previewPlaceholder">
+          <span class="ph-icon">📷</span>
+          <p>Your QR image preview<br>will appear here</p>
+        </div>
+
+        <div class="preview-box" id="previewBox">
+          <img id="previewImg" src="" alt="QR Preview">
+          <div class="result-box" id="uploadResult"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── CAMERA PANEL ── -->
+    <div class="panel" id="panel-camera">
+
+      <div class="camera-left">
+        <p style="font-size:0.78rem;font-weight:700;color:var(--gray-500);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:1rem;">Live Camera Detection</p>
+
+        <ul class="camera-info-list">
+          <li>
+            <div class="info-icon">📷</div>
+            <div>Point your camera at any QR code — it detects automatically, no button needed</div>
+          </li>
+          <li>
+            <div class="info-icon">🔐</div>
+            <div>Uses your rear camera for best QR scanning results on mobile</div>
+          </li>
+          <li>
+            <div class="info-icon">⚡</div>
+            <div>Scans every 300ms — results appear instantly when a QR is found</div>
+          </li>
+          <li>
+            <div class="info-icon">🛡️</div>
+            <div>Decoded URL is checked against URLiar's ML model in real time</div>
+          </li>
+        </ul>
+
+        <button class="start-cam-btn" id="startCamBtn" onclick="startCamera()">
+          📷 Start Camera
+        </button>
+        <button class="stop-cam-btn" id="stopCamBtn" onclick="stopCamera()">
+          ⏹ Stop Camera
+        </button>
+
+        <div class="result-box" id="cameraResult" style="margin-top:1rem;"></div>
+      </div>
+
+      <div class="camera-right" id="cameraRight">
+        <div class="cam-placeholder" id="camPlaceholder">
+          <span class="cam-ph-icon">📷</span>
+          <p>Camera feed will appear here<br>after you click Start Camera</p>
+        </div>
+
+        <video id="videoFeed" autoplay playsinline muted></video>
+
+        <div class="scan-overlay" id="scanOverlay">
+          <div class="scan-frame" id="scanFrame">
+            <div class="scan-line"></div>
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+          </div>
+        </div>
+
+        <div class="cam-status" id="camStatus">🔍 Scanning for QR codes...</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SCAN HISTORY -->
+  <div class="history-section">
+    <div class="history-header">
+      <div class="history-title">🕐 Recent Scans</div>
+      <button class="clear-btn" onclick="clearHistory()">Clear all</button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">No scans yet — upload or scan a QR code to get started</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="how-title">⚡ How QR Scanning Works</div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="step-num">1</div>
+        <span class="step-icon">📷</span>
+        <div class="step-label">Capture</div>
+        <div class="step-desc">Upload a QR image or use live camera</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">2</div>
+        <span class="step-icon">🔓</span>
+        <div class="step-label">Decode</div>
+        <div class="step-desc">jsQR library decodes the QR pattern</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">3</div>
+        <span class="step-icon">🤖</span>
+        <div class="step-label">Analyse</div>
+        <div class="step-desc">URL sent to URLiar ML model</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">4</div>
+        <span class="step-icon">🛡️</span>
+        <div class="step-label">Result</div>
+        <div class="step-desc">Safe ✅ or Phishing ⚠️ shown instantly</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<canvas id="decodeCanvas"></canvas>
+
+{% include "footer.html" %}
+
+<!-- jsQR Library -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+<script>
+  // ── TAB SWITCHING ────────────────────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+    if (tab !== 'camera') stopCamera();
+  }
+
+  // ── SCAN HISTORY ─────────────────────────────────────────────
+  let history = JSON.parse(localStorage.getItem('urliar_qr_history') || '[]');
+
+  function renderHistory() {
+    const list = document.getElementById('historyList');
+    if (history.length === 0) {
+      list.innerHTML = '<div class="history-empty">No scans yet — upload or scan a QR code to get started</div>';
+      return;
+    }
+    list.innerHTML = history.slice().reverse().map(item => `
+      <div class="history-item">
+        <span class="history-badge ${item.result}">${item.result === 'safe' ? '✅ Safe' : '⚠️ Phishing'}</span>
+        <span class="history-url">${item.url}</span>
+        <span class="history-time">${item.time}</span>
+      </div>
+    `).join('');
+  }
+
+  function addToHistory(url, result) {
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    history.push({ url, result, time });
+    if (history.length > 20) history.shift();
+    localStorage.setItem('urliar_qr_history', JSON.stringify(history));
+    renderHistory();
+  }
+
+  function clearHistory() {
+    history = [];
+    localStorage.removeItem('urliar_qr_history');
+    renderHistory();
+  }
+
+  renderHistory();
+
+  // ── UPLOAD MODE ──────────────────────────────────────────────
+  let uploadedData = null;
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedData = e.target.result;
+      document.getElementById('previewImg').src = e.target.result;
+      document.getElementById('previewPlaceholder').style.display = 'none';
+      document.getElementById('previewBox').classList.add('show');
+      document.getElementById('analyseBtn').disabled = false;
+      document.getElementById('uploadResult').className = 'result-box';
+      document.getElementById('uploadResult').innerHTML = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Drag and drop
+  const zone = document.getElementById('uploadZone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleFileUpload({ target: { files: [file] } });
+    }
+  });
+
+  function analyseUpload() {
+    if (!uploadedData) return;
+    const result = document.getElementById('uploadResult');
+    result.className = 'result-box checking show';
+    result.innerHTML = '🔍 Decoding QR code...';
+
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.getElementById('decodeCanvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+      if (code) {
+        result.innerHTML = `🔍 QR decoded! Checking URL...<div class="result-url">${code.data}</div>`;
+        checkURL(code.data, 'uploadResult');
+      } else {
+        result.className = 'result-box warning show';
+        result.innerHTML = '⚠️ No QR code detected in this image. Please try a clearer or higher-resolution photo.';
+      }
+    };
+    img.src = uploadedData;
+  }
+
+  function resetUpload() {
+    document.getElementById('qrFileInput').value = '';
+    document.getElementById('previewPlaceholder').style.display = 'block';
+    document.getElementById('previewBox').classList.remove('show');
+    document.getElementById('uploadResult').className = 'result-box';
+    document.getElementById('uploadResult').innerHTML = '';
+    document.getElementById('analyseBtn').disabled = true;
+    uploadedData = null;
+  }
+
+  // ── CAMERA MODE ──────────────────────────────────────────────
+  let stream = null;
+  let scanLoop = null;
+  let lastScanned = '';
+
+  async function startCamera() {
+    const result = document.getElementById('cameraResult');
+    result.className = 'result-box checking show';
+    result.innerHTML = '📷 Starting camera...';
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+
+      const video = document.getElementById('videoFeed');
+      video.srcObject = stream;
+      video.style.display = 'block';
+      document.getElementById('camPlaceholder').style.display = 'none';
+      document.getElementById('scanOverlay').classList.add('show');
+      document.getElementById('camStatus').classList.add('show');
+      document.getElementById('startCamBtn').style.display = 'none';
+      document.getElementById('stopCamBtn').style.display = 'block';
+
+      result.className = 'result-box checking show';
+      result.innerHTML = '📷 Camera active — point at a QR code to scan automatically';
+
+      scanLoop = setInterval(scanFrame, 300);
+
+    } catch (err) {
+      result.className = 'result-box warning show';
+      if (err.name === 'NotAllowedError') {
+        result.innerHTML = '🚫 Camera permission denied. Please allow camera access in your browser settings and try again.';
+      } else if (err.name === 'NotFoundError') {
+        result.innerHTML = '📷 No camera found on this device. Try the Upload option instead.';
+      } else {
+        result.innerHTML = '⚠️ Camera error: ' + err.message;
+      }
+    }
+  }
+
+  function scanFrame() {
+    const video = document.getElementById('videoFeed');
+    if (!video || video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+    const canvas = document.getElementById('decodeCanvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, canvas.width, canvas.height, { inversionAttempts: 'dontInvert' });
+
+    if (code && code.data !== lastScanned) {
+      lastScanned = code.data;
+
+      // Flash green
+      const frame = document.getElementById('scanFrame');
+      frame.style.borderColor = '#10b981';
+      setTimeout(() => { if(frame) frame.style.borderColor = 'rgba(79,70,229,0.8)'; }, 600);
+
+      document.getElementById('cameraResult').className = 'result-box checking show';
+      document.getElementById('cameraResult').innerHTML = `✅ QR detected! Checking URL...<div class="result-url">${code.data}</div>`;
+
+      checkURL(code.data, 'cameraResult');
+      setTimeout(() => { lastScanned = ''; }, 6000);
+    }
+  }
+
+  function stopCamera() {
+    if (scanLoop) clearInterval(scanLoop);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    stream = null; lastScanned = '';
+
+    const video = document.getElementById('videoFeed');
+    video.srcObject = null; video.style.display = 'none';
+    document.getElementById('camPlaceholder').style.display = 'flex';
+    document.getElementById('scanOverlay').classList.remove('show');
+    document.getElementById('camStatus').classList.remove('show');
+    document.getElementById('startCamBtn').style.display = 'block';
+    document.getElementById('stopCamBtn').style.display = 'none';
+
+    document.getElementById('cameraResult').className = 'result-box';
+    document.getElementById('cameraResult').innerHTML = '';
+  }
+
+  // ── CHECK URL VIA FLASK ──────────────────────────────────────
+  async function checkURL(url, resultId) {
+    const result = document.getElementById(resultId);
+
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      result.className = 'result-box warning show';
+      result.innerHTML = `⚠️ QR contains text, not a URL — no security check needed.<div class="result-url">${url}</div>`;
+      return;
+    }
+
+    try {
+      const res = await fetch('/qr-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+
+      if (data.result === 'phishing') {
+        result.className = 'result-box phishing show';
+        result.innerHTML = `⚠️ <strong>Phishing URL Detected!</strong> This QR leads to a dangerous site. Do NOT visit it.<div class="result-url">${url}</div>`;
+      } else {
+        result.className = 'result-box safe show';
+        result.innerHTML = `✅ <strong>Safe URL.</strong> This QR code appears to be legitimate.<div class="result-url">${url}</div>`;
+      }
+
+      addToHistory(url, data.result);
+
+    } catch (err) {
+      result.className = 'result-box warning show';
+      result.innerHTML = `⚠️ Could not check URL — make sure Flask app is running.<div class="result-url">${url}</div>`;
+    }
+  }
+
+  // Stop camera when leaving page
+  window.addEventListener('beforeunload', stopCamera);
+</script>
+
+</body>
+</html>

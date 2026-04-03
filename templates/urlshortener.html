@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#4f46e5">
+  <title>URL Shortener & Expander — URLiar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --indigo: #4f46e5; --indigo-light: #6366f1; --indigo-dark: #3730a3;
+      --indigo-50: #eef2ff; --indigo-100: #e0e7ff; --indigo-200: #c7d2fe;
+      --white: #ffffff; --gray-50: #f9fafb; --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb; --gray-300: #d1d5db; --gray-400: #9ca3af;
+      --gray-500: #6b7280; --gray-600: #4b5563; --gray-800: #1f2937;
+      --green: #10b981; --green-50: #f0fdf4; --green-100: #dcfce7;
+      --red: #ef4444; --red-50: #fef2f2; --red-100: #fee2e2;
+      --amber: #f59e0b; --amber-50: #fffbeb; --amber-100: #fef3c7;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+    body { font-family: var(--font); background: var(--gray-50); color: var(--gray-800); overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.93);
+      -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 1.2rem; font-weight: 800; color: var(--gray-800);
+      text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a {
+      font-size: 0.88rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.5rem 0.9rem; border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--indigo); background: var(--indigo-50); }
+    .back-link {
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-500);
+      text-decoration: none; padding: 0.45rem 0.9rem;
+      border-radius: 8px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .back-link:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--indigo) 0%, var(--indigo-light) 100%);
+      padding: 3.5rem 2rem 6rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top:0;left:0;right:0;bottom:0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.15); color: white;
+      font-size: 0.78rem; font-weight: 700;
+      padding: 0.4rem 1rem; border-radius: 100px;
+      margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.25); position: relative;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: white;
+      letter-spacing: -0.03em; margin-bottom: 0.75rem; position: relative;
+    }
+    .hero p {
+      font-size: 1rem; color: rgba(255,255,255,0.82);
+      max-width: 500px; margin: 0 auto; line-height: 1.65; position: relative;
+    }
+
+    /* ── MAIN ── */
+    .main-wrap { max-width: 820px; margin: -3.5rem auto 4rem; padding: 0 2rem; }
+
+    /* ── TAB SWITCHER ── */
+    .tab-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 16px; padding: 0.4rem; gap: 0.4rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .tab {
+      padding: 0.85rem 1rem; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700; color: var(--gray-400);
+      border: none; background: transparent; cursor: pointer;
+      font-family: var(--font); transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    }
+    .tab:hover { color: var(--indigo); background: var(--indigo-50); }
+    .tab.active {
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+    }
+
+    /* ── CARD ── */
+    .tool-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 22px; overflow: hidden;
+      box-shadow: 0 12px 40px rgba(79,70,229,0.08);
+    }
+
+    .panel { display: none; padding: 2rem; }
+    .panel.active { display: block; }
+
+    /* Input row */
+    .input-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--indigo); margin-bottom: 0.6rem;
+    }
+
+    .input-row {
+      display: flex; border: 1.5px solid var(--gray-200);
+      border-radius: 14px; overflow: hidden; transition: all 0.3s;
+      margin-bottom: 1rem;
+    }
+    .input-row:focus-within {
+      border-color: var(--indigo);
+      box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+    }
+    .url-input {
+      flex: 1; border: none; outline: none;
+      font-family: var(--mono); font-size: 0.88rem;
+      padding: 0.95rem 1.1rem; background: var(--gray-50); color: var(--gray-800);
+    }
+    .url-input::placeholder { color: var(--gray-400); }
+    .go-btn {
+      background: linear-gradient(135deg, var(--indigo), var(--indigo-light));
+      color: white; border: none; font-family: var(--font);
+      font-size: 0.88rem; font-weight: 700;
+      padding: 0.95rem 1.8rem; cursor: pointer; white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .go-btn:hover { opacity: 0.9; }
+    .go-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Custom alias row */
+    .alias-row {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .alias-prefix {
+      font-family: var(--mono); font-size: 0.82rem; color: var(--gray-400);
+      white-space: nowrap;
+    }
+    .alias-input {
+      flex: 1; min-width: 120px; border: 1.5px solid var(--gray-200);
+      border-radius: 10px; outline: none; font-family: var(--mono);
+      font-size: 0.88rem; padding: 0.7rem 0.9rem;
+      background: var(--gray-50); color: var(--gray-800); transition: all 0.2s;
+    }
+    .alias-input:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
+    .alias-hint { font-size: 0.75rem; color: var(--gray-400); }
+
+    /* Result box */
+    .result-box {
+      border-radius: 14px; padding: 1.2rem 1.4rem;
+      display: none; animation: slideUp 0.3s ease both;
+    }
+    .result-box.show { display: block; }
+    .result-box.success { background: var(--green-50); border: 1.5px solid var(--green-100); }
+    .result-box.error { background: var(--red-50); border: 1.5px solid var(--red-100); }
+    .result-box.warning { background: var(--amber-50); border: 1.5px solid var(--amber-100); }
+    .result-box.info { background: var(--indigo-50); border: 1.5px solid var(--indigo-100); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; margin-bottom: 0.5rem;
+    }
+    .result-label.success { color: #065f46; }
+    .result-label.error { color: #991b1b; }
+    .result-label.warning { color: #92400e; }
+    .result-label.info { color: var(--indigo); }
+
+    .result-url-row {
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .result-url {
+      font-family: var(--mono); font-size: 0.88rem; font-weight: 500;
+      color: var(--gray-800); word-break: break-all; flex: 1;
+    }
+    .copy-btn {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-family: var(--font); font-size: 0.78rem; font-weight: 700;
+      color: var(--indigo); background: white; border: 1.5px solid var(--indigo-200);
+      padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .copy-btn:hover { background: var(--indigo-50); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green-100); background: var(--green-50); }
+
+    .result-meta {
+      font-size: 0.78rem; color: var(--gray-500); margin-top: 0.6rem;
+      display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem;
+    }
+    .result-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+    /* Safety badge */
+    .safety-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.7rem;
+      border-radius: 100px; margin-top: 0.5rem;
+    }
+    .safety-badge.safe { background: var(--green-50); color: #065f46; border: 1px solid var(--green-100); }
+    .safety-badge.phishing { background: var(--red-50); color: #991b1b; border: 1px solid var(--red-100); }
+    .safety-badge.checking { background: var(--indigo-50); color: var(--indigo); border: 1px solid var(--indigo-100); }
+
+    /* QR code output */
+    .qr-output {
+      display: none; text-align: center; margin-top: 1rem;
+      padding: 1rem; background: var(--gray-50);
+      border: 1px solid var(--gray-200); border-radius: 12px;
+    }
+    .qr-output.show { display: block; }
+    .qr-output canvas { border-radius: 8px; }
+    .qr-label { font-size: 0.78rem; color: var(--gray-500); margin-top: 0.5rem; }
+
+    /* History */
+    .history-wrap {
+      margin-top: 0; border-top: 1px solid var(--gray-100);
+      padding: 1.5rem 2rem;
+    }
+    .history-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .history-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--gray-800);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .clear-btn {
+      font-size: 0.75rem; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); transition: color 0.2s;
+    }
+    .clear-btn:hover { color: var(--red); }
+
+    .history-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .history-empty { font-size: 0.83rem; color: var(--gray-400); text-align: center; padding: 1rem; }
+
+    .history-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.8rem 1rem; border: 1px solid var(--gray-200);
+      border-radius: 10px; background: var(--gray-50); transition: all 0.2s;
+    }
+    .history-item:hover { border-color: var(--indigo-200); background: var(--indigo-50); }
+    .history-type {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 0.2rem 0.55rem; border-radius: 100px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .history-type.shorten { background: var(--indigo-100); color: var(--indigo); }
+    .history-type.expand { background: var(--green-100); color: #065f46; }
+    .history-url { font-family: var(--mono); font-size: 0.78rem; color: var(--gray-600); flex: 1; word-break: break-all; }
+    .history-copy {
+      font-size: 0.72rem; color: var(--gray-400); cursor: pointer;
+      background: none; border: none; font-family: var(--font); transition: color 0.2s;
+    }
+    .history-copy:hover { color: var(--indigo); }
+
+    /* Info cards */
+    .info-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1rem; margin-top: 1.5rem;
+    }
+    .info-card {
+      background: white; border: 1px solid var(--gray-200);
+      border-radius: 16px; padding: 1.5rem; text-align: center; transition: all 0.25s;
+    }
+    .info-card:hover { border-color: var(--indigo-200); box-shadow: 0 6px 20px rgba(79,70,229,0.08); transform: translateY(-2px); }
+    .info-icon { font-size: 1.8rem; margin-bottom: 0.6rem; display: block; }
+    .info-title { font-size: 0.88rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.3rem; }
+    .info-desc { font-size: 0.78rem; color: var(--gray-500); line-height: 1.5; }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .info-grid { grid-template-columns: 1fr; }
+      .result-url-row { flex-direction: column; align-items: flex-start; }
+      .main-wrap { padding: 0 1rem; }
+      .panel { padding: 1.5rem; }
+      .history-wrap { padding: 1.2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🛡️</div>
+    URLiar
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/qr">QR Scan</a>
+    <a href="/shortener" class="active">Shortener</a>
+    <a href="/about">About</a>
+  </div>
+  <a href="/" class="back-link">← Back to Home</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🔗 URL Tools</div>
+  <h1>URL Shortener & Expander</h1>
+  <p>Shorten long URLs into clean shareable links — or expand any short link to reveal the real destination before you click it.</p>
+</div>
+
+<div class="main-wrap">
+
+  <!-- TABS -->
+  <div class="tab-row">
+    <button class="tab active" id="tab-shorten" onclick="switchTab('shorten')">
+      ✂️ Shorten URL
+    </button>
+    <button class="tab" id="tab-expand" onclick="switchTab('expand')">
+      🔍 Expand Short URL
+    </button>
+  </div>
+
+  <!-- TOOL CARD -->
+  <div class="tool-card">
+
+    <!-- ── SHORTEN PANEL ── -->
+    <div class="panel active" id="panel-shorten">
+      <div class="input-label">Paste your long URL</div>
+      <div class="input-row">
+        <input class="url-input" id="shortenInput" type="url"
+          placeholder="https://your-very-long-url.com/with/lots/of/params?foo=bar"
+          autocomplete="off" onkeydown="if(event.key==='Enter') shortenURL()">
+        <button class="go-btn" id="shortenBtn" onclick="shortenURL()">Shorten →</button>
+      </div>
+
+      <div class="alias-row">
+        <span class="alias-prefix">urliar.link/</span>
+        <input class="alias-input" id="aliasInput" type="text"
+          placeholder="custom-alias (optional)" maxlength="20"
+          oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+        <span class="alias-hint">Leave blank for auto-generated</span>
+      </div>
+
+      <div class="result-box" id="shortenResult"></div>
+      <div class="qr-output" id="qrOutput">
+        <canvas id="qrCanvas"></canvas>
+        <div class="qr-label">QR Code for your short link</div>
+      </div>
+    </div>
+
+    <!-- ── EXPAND PANEL ── -->
+    <div class="panel" id="panel-expand">
+      <div class="input-label">Paste a short URL to reveal its destination</div>
+      <div class="input-row">
+        <input class="url-input" id="expandInput" type="url"
+          placeholder="https://bit.ly/abc123 or any short link..."
+          autocomplete="off" onkeydown="if(event.key==='Enter') expandURL()">
+        <button class="go-btn" id="expandBtn" onclick="expandURL()">Expand →</button>
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--gray-400);margin-bottom:1rem;">
+        Supported: bit.ly, tinyurl.com, t.co, is.gd, ow.ly, short.link, urliar.link, and most others
+      </p>
+
+      <div class="result-box" id="expandResult"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="history-wrap">
+      <div class="history-header">
+        <div class="history-title">🕐 Recent Links</div>
+        <button class="clear-btn" onclick="clearHistory()">Clear all</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">No links yet — shorten or expand a URL to get started</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INFO CARDS -->
+  <div class="info-grid">
+    <div class="info-card">
+      <span class="info-icon">✂️</span>
+      <div class="info-title">Smart Shortening</div>
+      <div class="info-desc">Turn long, messy URLs into clean short links with optional custom aliases</div>
+    </div>
+    <div class="info-card">
+      <span class="info-icon">🔍</span>
+      <div class="info-title">Safe Expansion</div>
+      <div class="info-desc">Reveal where any short link actually points before you click — with phishing check</div>
+    </div>
+    <div class="info-card">
+      <span class="info-icon">📊</span>
+      <div class="info-title">QR Code Generator</div>
+      <div class="info-desc">Every shortened URL gets a downloadable QR code automatically generated</div>
+    </div>
+  </div>
+
+</div>
+
+{% include "footer.html" %}
+
+<!-- QR code library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+  // ── TAB SWITCHING ────────────────────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+  }
+
+  // ── URL STORAGE (localStorage) ───────────────────────────────
+  // We store short URLs in localStorage so they persist across visits
+  let urlMap = JSON.parse(localStorage.getItem('urliar_links') || '{}');
+  // urlMap = { alias: { original, short, created, clicks } }
+
+  function saveMap() {
+    localStorage.setItem('urliar_links', JSON.stringify(urlMap));
+  }
+
+  // ── HISTORY ──────────────────────────────────────────────────
+  let historyList = JSON.parse(localStorage.getItem('urliar_history') || '[]');
+
+  function renderHistory() {
+    const el = document.getElementById('historyList');
+    if (!historyList.length) {
+      el.innerHTML = '<div class="history-empty">No links yet — shorten or expand a URL to get started</div>';
+      return;
+    }
+    el.innerHTML = historyList.slice().reverse().slice(0,10).map((item, i) => `
+      <div class="history-item">
+        <span class="history-type ${item.type}">${item.type === 'shorten' ? '✂️ Short' : '🔍 Expand'}</span>
+        <span class="history-url">${item.url}</span>
+        <button class="history-copy" onclick="copyText('${item.url}', this)">📋 Copy</button>
+      </div>
+    `).join('');
+  }
+
+  function addHistory(url, type) {
+    historyList.push({ url, type, time: Date.now() });
+    if (historyList.length > 30) historyList.shift();
+    localStorage.setItem('urliar_history', JSON.stringify(historyList));
+    renderHistory();
+  }
+
+  function clearHistory() {
+    historyList = [];
+    localStorage.removeItem('urliar_history');
+    renderHistory();
+  }
+
+  renderHistory();
+
+  // ── COPY HELPER ──────────────────────────────────────────────
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn ? btn.textContent : '';
+      if (btn) { btn.textContent = '✅ Copied!'; btn.classList.add('copied'); }
+      setTimeout(() => {
+        if (btn) { btn.textContent = original || '📋 Copy'; btn.classList.remove('copied'); }
+      }, 2000);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // ── GENERATE ALIAS ───────────────────────────────────────────
+  function generateAlias() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 6; i++) result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+  }
+
+  // ── GENERATE QR CODE ─────────────────────────────────────────
+  function generateQR(url) {
+    const qrOutput = document.getElementById('qrOutput');
+    const canvas = document.getElementById('qrCanvas');
+    QRCode.toCanvas(canvas, url, {
+      width: 160, margin: 2,
+      color: { dark: '#1f2937', light: '#f9fafb' }
+    }, (err) => {
+      if (!err) qrOutput.classList.add('show');
+    });
+  }
+
+  // ── VALIDATE URL ─────────────────────────────────────────────
+  function isValidURL(str) {
+    try { new URL(str); return true; } catch { return false; }
+  }
+
+  // ── CHECK URL SAFETY via Flask ───────────────────────────────
+  async function checkSafety(url) {
+    try {
+      const res = await fetch('/qr-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      return data.result; // 'safe' or 'phishing'
+    } catch {
+      return 'unknown';
+    }
+  }
+
+  // ── SHORTEN URL ──────────────────────────────────────────────
+  async function shortenURL() {
+    const input = document.getElementById('shortenInput').value.trim();
+    const aliasRaw = document.getElementById('aliasInput').value.trim();
+    const result = document.getElementById('shortenResult');
+    const btn = document.getElementById('shortenBtn');
+
+    if (!input) {
+      result.className = 'result-box error show';
+      result.innerHTML = `<div class="result-label error">⚠️ Error</div><div class="result-url">Please enter a URL to shorten.</div>`;
+      return;
+    }
+
+    const url = input.startsWith('http') ? input : 'https://' + input;
+    if (!isValidURL(url)) {
+      result.className = 'result-box error show';
+      result.innerHTML = `<div class="result-label error">⚠️ Invalid URL</div><div class="result-url">Please enter a valid URL including https://</div>`;
+      return;
+    }
+
+    // Set loading state
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Shortening...';
+    result.className = 'result-box info show';
+    result.innerHTML = `<div class="result-label info">⏳ Processing</div><div class="result-url">Creating your short link...</div>`;
+    document.getElementById('qrOutput').classList.remove('show');
+
+    // Generate or validate alias
+    let alias = aliasRaw || generateAlias();
+    // Make sure alias is unique
+    while (!aliasRaw && urlMap[alias]) alias = generateAlias();
+
+    if (aliasRaw && urlMap[aliasRaw] && urlMap[aliasRaw].original !== url) {
+      result.className = 'result-box error show';
+      result.innerHTML = `<div class="result-label error">⚠️ Alias Taken</div><div class="result-url">The alias "<b>${aliasRaw}</b>" is already in use. Please choose a different one.</div>`;
+      btn.disabled = false; btn.textContent = 'Shorten →';
+      return;
+    }
+
+    // Check safety of original URL
+    const safety = await checkSafety(url);
+
+    if (safety === 'phishing') {
+      result.className = 'result-box error show';
+      result.innerHTML = `
+        <div class="result-label error">🚫 Blocked — Phishing URL Detected</div>
+        <div class="result-url">URLiar will not shorten a phishing URL. This link has been flagged as dangerous.</div>
+        <div class="result-meta"><span>🛡️ Protected by URLiar ML model</span></div>
+      `;
+      btn.disabled = false; btn.textContent = 'Shorten →';
+      return;
+    }
+
+    // Store in localStorage
+    const shortURL = `${window.location.origin}/s/${alias}`;
+    urlMap[alias] = { original: url, short: shortURL, created: Date.now(), clicks: 0 };
+    saveMap();
+
+    const safetyBadge = safety === 'safe'
+      ? '<span class="safety-badge safe">✅ URL Verified Safe</span>'
+      : '<span class="safety-badge checking">⚠️ Safety unknown — check manually</span>';
+
+    result.className = 'result-box success show';
+    result.innerHTML = `
+      <div class="result-label success">✅ Short Link Created!</div>
+      <div class="result-url-row">
+        <span class="result-url">${shortURL}</span>
+        <button class="copy-btn" onclick="copyText('${shortURL}', this)">📋 Copy</button>
+      </div>
+      <div class="result-meta">
+        <span>🔗 Original: <a href="${url}" target="_blank" style="color:var(--indigo);word-break:break-all;">${url.length > 60 ? url.substring(0,60)+'...' : url}</a></span>
+      </div>
+      ${safetyBadge}
+    `;
+
+    // Generate QR code
+    generateQR(shortURL);
+
+    addHistory(shortURL, 'shorten');
+    btn.disabled = false; btn.textContent = 'Shorten →';
+    document.getElementById('aliasInput').value = '';
+  }
+
+  // ── EXPAND URL ───────────────────────────────────────────────
+  async function expandURL() {
+    const input = document.getElementById('expandInput').value.trim();
+    const result = document.getElementById('expandResult');
+    const btn = document.getElementById('expandBtn');
+
+    if (!input) {
+      result.className = 'result-box error show';
+      result.innerHTML = `<div class="result-label error">⚠️ Error</div><div class="result-url">Please enter a short URL to expand.</div>`;
+      return;
+    }
+
+    const url = input.startsWith('http') ? input : 'https://' + input;
+    if (!isValidURL(url)) {
+      result.className = 'result-box error show';
+      result.innerHTML = `<div class="result-label error">⚠️ Invalid URL</div><div class="result-url">Please enter a valid short URL.</div>`;
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Expanding...';
+    result.className = 'result-box info show';
+    result.innerHTML = `<div class="result-label info">⏳ Resolving</div><div class="result-url">Tracing the redirect chain...</div>`;
+
+    // Check if it's one of our own shortened links
+    const urlObj = new URL(url);
+    if (urlObj.hostname === window.location.hostname && urlObj.pathname.startsWith('/s/')) {
+      const alias = urlObj.pathname.replace('/s/', '');
+      if (urlMap[alias]) {
+        const entry = urlMap[alias];
+        const safety = await checkSafety(entry.original);
+        const safetyBadge = safety === 'safe'
+          ? '<span class="safety-badge safe">✅ Safe — Verified by URLiar</span>'
+          : safety === 'phishing'
+          ? '<span class="safety-badge phishing">⚠️ Phishing — Do NOT visit!</span>'
+          : '<span class="safety-badge checking">🔍 Safety unknown</span>';
+
+        result.className = 'result-box success show';
+        result.innerHTML = `
+          <div class="result-label success">🔍 Short Link Resolved</div>
+          <div class="result-url-row">
+            <span class="result-url">${entry.original}</span>
+            <button class="copy-btn" onclick="copyText('${entry.original}', this)">📋 Copy</button>
+          </div>
+          <div class="result-meta">
+            <span>📅 Created: ${new Date(entry.created).toLocaleDateString()}</span>
+            <span>🔗 Alias: ${alias}</span>
+          </div>
+          ${safetyBadge}
+        `;
+        addHistory(entry.original, 'expand');
+        btn.disabled = false; btn.textContent = 'Expand →';
+        return;
+      }
+    }
+
+    // For external short URLs — use a CORS proxy to follow redirects
+    try {
+      // Try using the unshorten.me API
+      const proxyUrl = `https://unshorten.me/json/${encodeURIComponent(url)}`;
+      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(8000) });
+      const data = await res.json();
+
+      if (data.resolved_url && data.resolved_url !== url) {
+        const resolved = data.resolved_url;
+        const safety = await checkSafety(resolved);
+
+        const safetyBadge = safety === 'safe'
+          ? '<span class="safety-badge safe">✅ Safe — Verified by URLiar</span>'
+          : safety === 'phishing'
+          ? '<span class="safety-badge phishing">⚠️ Phishing Detected — Do NOT visit this site!</span>'
+          : '<span class="safety-badge checking">🔍 Safety check unavailable</span>';
+
+        const boxClass = safety === 'phishing' ? 'error' : 'success';
+        result.className = `result-box ${boxClass} show`;
+        result.innerHTML = `
+          <div class="result-label ${boxClass}">🔍 ${safety === 'phishing' ? '⚠️ Dangerous Destination!' : 'Expanded Successfully'}</div>
+          <div class="result-url-row">
+            <span class="result-url">${resolved}</span>
+            <button class="copy-btn" onclick="copyText('${resolved}', this)">📋 Copy</button>
+          </div>
+          <div class="result-meta">
+            <span>🔗 Short URL: ${url}</span>
+          </div>
+          ${safetyBadge}
+        `;
+        addHistory(resolved, 'expand');
+
+      } else {
+        // Direct URL — no redirect found
+        result.className = 'result-box warning show';
+        result.innerHTML = `
+          <div class="result-label warning">ℹ️ No Redirect Found</div>
+          <div class="result-url">${url}</div>
+          <div class="result-meta"><span>This URL does not appear to redirect anywhere. It may already be a full URL, or the service may be unreachable.</span></div>
+        `;
+      }
+
+    } catch (err) {
+      // Fallback — direct safety check without expansion
+      const safety = await checkSafety(url);
+      const safetyBadge = safety === 'safe'
+        ? '<span class="safety-badge safe">✅ URL appears safe</span>'
+        : safety === 'phishing'
+        ? '<span class="safety-badge phishing">⚠️ Phishing Detected!</span>'
+        : '';
+
+      result.className = 'result-box warning show';
+      result.innerHTML = `
+        <div class="result-label warning">⚠️ Could Not Expand</div>
+        <div class="result-url">${url}</div>
+        <div class="result-meta"><span>The redirect resolver is unavailable. Try visiting the link directly with caution.</span></div>
+        ${safetyBadge}
+      `;
+    }
+
+    btn.disabled = false; btn.textContent = 'Expand →';
+  }
+
+  // ── REDIRECT HANDLER ─────────────────────────────────────────
+  // When someone visits /s/alias, Flask redirects them.
+  // This JS is just for the tool page itself.
+</script>
+
+</body>
+</html>

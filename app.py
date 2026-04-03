@@ -45,17 +45,56 @@ def index():
     return render_template("index.html", predict=predict)
 
 
-# API for Chrome extension — checks a URL and returns phishing/safe
-@app.route("/api/check", methods=["POST", "OPTIONS"])
-def api_check():
-    # Allow requests from the Chrome extension
-    if request.method == "OPTIONS":
-        response = jsonify({})
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-        response.headers["Access-Control-Allow-Methods"] = "POST"
-        return response
+import json
+import os
 
+# In-memory URL store (use a database for production)
+url_store = {}
+
+@app.route("/shortener")
+def shortener():
+    return render_template("urlshortener.html")
+
+
+@app.route("/shorten", methods=["POST"])
+def shorten():
+    data = request.get_json()
+    if not data or "url" not in data:
+        return jsonify({"error": "No URL provided"}), 400
+
+    url = data["url"]
+    alias = data.get("alias", "")
+
+    # Generate random alias if not provided
+    if not alias:
+        import random, string
+        alias = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
+
+    # Check if alias already taken
+    if alias in url_store and url_store[alias] != url:
+        return jsonify({"error": "Alias already taken"}), 409
+
+    url_store[alias] = url
+    short_url = request.host_url + "s/" + alias
+    return jsonify({"short_url": short_url, "alias": alias})
+
+
+@app.route("/s/<alias>")
+def redirect_short(alias):
+    from flask import redirect as flask_redirect
+    if alias in url_store:
+        return flask_redirect(url_store[alias])
+    return "Short URL not found", 404
+
+
+@app.route("/qr")
+def qr_scanner():
+    return render_template("qr.html")
+
+
+# QR code URL checker — called by the QR scanner on the frontend
+@app.route("/qr-check", methods=["POST"])
+def qr_check():
     global scan_count, phishing_count, safe_count
 
     data = request.get_json()
@@ -64,7 +103,6 @@ def api_check():
 
     url = data["url"]
     cleaned_url = re.sub(r'^https?://(www\.)?', '', url)
-
     result = model.predict(vector.transform([cleaned_url]))[0]
     scan_count += 1
 
@@ -75,9 +113,7 @@ def api_check():
         safe_count += 1
         label = "safe"
 
-    response = jsonify({"url": url, "result": label})
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
+    return jsonify({"url": url, "result": label})
 
 
 # API for live stats
