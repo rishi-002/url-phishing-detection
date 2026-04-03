@@ -366,9 +366,54 @@
     @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
     @keyframes popIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
     @keyframes shake { 0%,100%{transform:rotate(0);} 20%{transform:rotate(-10deg);} 40%{transform:rotate(10deg);} 60%{transform:rotate(-6deg);} 80%{transform:rotate(6deg);} }
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column; justify-content: center;
+      gap: 5px; width: 38px; height: 38px;
+      background: var(--gray-100); border: none;
+      border-radius: 8px; cursor: pointer; padding: 8px;
+      transition: background 0.2s;
+    }
+    .hamburger:hover { background: var(--gray-200); }
+    .hamburger span {
+      display: block; height: 2px; width: 100%;
+      background: var(--gray-600); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0.5rem 1rem 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      position: sticky; top: 68px; z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--gray-600); text-decoration: none;
+      padding: 0.75rem 0.75rem; border-radius: 8px;
+      transition: all 0.2s;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover { color: var(--indigo); background: var(--indigo-50); }
+
+    body.dark-mode .mobile-menu { background: #0f0f1a !important; border-color: #1e293b !important; }
+    body.dark-mode .mobile-menu a { color: #94a3b8 !important; border-color: #1e293b !important; }
+    body.dark-mode .mobile-menu a:hover { color: #818cf8 !important; background: rgba(79,70,229,0.15) !important; }
 
     @media (max-width: 768px) {
       .nav-links { display: none; }
+      .theme-btn { display: none; }
+      .hamburger { display: flex; }
       .stats-grid, .info-grid, .team-grid { grid-template-columns: 1fr; }
       .cta-card { flex-direction: column; }
       .cta-canvas-wrap { width: 100%; height: 200px; }
@@ -393,7 +438,20 @@
     <a href="/about">About</a>
   </div>
   <button id="themeBtn" class="theme-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home" onclick="closeMobileMenu()">Home</a>
+  <a href="#detection" onclick="closeMobileMenu()">Detection</a>
+  <a href="/qr" onclick="closeMobileMenu()">QR Scan</a>
+  <a href="/shortener" onclick="closeMobileMenu()">Shortener</a>
+  <a href="/about" onclick="closeMobileMenu()">About</a>
+</div>
+
 
 <!-- HERO -->
 <section id="home" class="hero">
@@ -601,6 +659,18 @@
   function toggleTheme(){
     document.body.classList.toggle("dark-mode");
     document.getElementById("themeBtn").textContent = document.body.classList.contains("dark-mode")?"☀️ Light Mode":"🌙 Dark Mode";
+  }
+ // Hamburger menu
+  function toggleMenu(){
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  function closeMobileMenu(){
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
   }
 
   // Nav highlight
